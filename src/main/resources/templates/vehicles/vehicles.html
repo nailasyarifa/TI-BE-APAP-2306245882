@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Vehicles - Vehicle Rental App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Inline CSS sederhana supaya langsung jalan -->
+    <style>
+        body { font-family: "Helvetica Neue", Arial, sans-serif; background:#f6f8fa; margin:0; color:#333; }
+        .container { max-width:1100px; margin:40px auto; background:#fff; padding:28px; box-shadow:0 6px 18px rgba(0,0,0,0.06); border-radius:8px; }
+        .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; gap:12px; }
+        .btn { display:inline-block; padding:10px 16px; border-radius:8px; text-decoration:none; color:#fff; font-weight:600; box-shadow: none; }
+        .btn-success { background:#28a745; }
+        .btn-secondary { background:#6c757d; }
+        .btn-primary { background:#198754; }
+        .controls { display:flex; gap:10px; align-items:center; }
+        .search-box { padding:8px 12px; border-radius:6px; border:1px solid #ddd; min-width:260px; }
+        select.filter { padding:8px 12px; border-radius:6px; border:1px solid #ddd; }
+
+        table { width:100%; border-collapse:collapse; margin-top:8px; }
+        thead th { text-align:left; padding:12px 12px; border-bottom:2px solid #e6e6e6; background:#fafafa; color:#333; font-weight:700; }
+        tbody td { padding:12px; border-bottom:1px solid #f0f0f0; vertical-align:middle; }
+        tbody tr:nth-child(even) { background:#fcfcfc; }
+        .price { color:#198754; font-weight:700; }
+
+        .action-btn { padding:8px 12px; border-radius:8px; color:#fff; background:#2f8f46; text-decoration:none; }
+        .empty { text-align:center; padding:24px; color:#666; }
+
+        /* responsive */
+        @media (max-width:800px) {
+            .container { margin:16px; padding:16px; }
+            thead th:nth-child(4), tbody td:nth-child(4),
+            thead th:nth-child(5), tbody td:nth-child(5),
+            thead th:nth-child(6), tbody td:nth-child(6) { display:none; }
+        }
+    </style>
+
+    <script>
+        // Kirim form GET saat tekan enter pada search
+        function submitFilter() {
+            document.getElementById('filterForm').submit();
+        }
+        // optional: clear search
+        function clearSearch() {
+            document.getElementById('q').value = '';
+            submitFilter();
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="top-bar">
+        <div>
+            <a href="/vehicles/create" class="btn btn-success">Add A New Vehicle</a>
+            <a href="#" class="btn btn-secondary">Statistics</a>
+        </div>
+
+        <form id="filterForm" method="get" action="/vehicles" class="controls" th:action="@{/vehicles}">
+            <input id="q" name="search" type="text" class="search-box" placeholder="Search vehicles..." th:value="${param.search}">
+            <select name="type" class="filter" th:value="${param.type}">
+                <option value="">All Types</option>
+                <option value="Sedan" th:selected="${param.type=='Sedan'}">Sedan</option>
+                <option value="SUV" th:selected="${param.type=='SUV'}">SUV</option>
+                <option value="MPV" th:selected="${param.type=='MPV'}">MPV</option>
+                <option value="Luxury" th:selected="${param.type=='Luxury'}">Luxury</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>No</th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Capacity</th>
+            <th>Status</th>
+            <th>Price per Day</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="veh, iterStat : ${vehicles}">
+            <td th:text="${iterStat.index + 1}">1</td>
+            <td th:text="${veh.id}">VEH0001</td>
+            <td th:text="${veh.type}">SUV</td>
+            <td th:text="${veh.brand}">Toyota</td>
+            <td th:text="${veh.model}">Avanza</td>
+            <td th:text="${veh.capacity}">7</td>
+            <td th:text="${veh.status}">Available</td>
+            <td class="price" th:text="${#numbers.formatDecimal(veh.price, 0, 'COMMA', 2, 'POINT')}">Rp 1.000.000,00</td>
+            <td>
+                <a th:href="@{/vehicles/{id}(id=${veh.id})}" class="action-btn">Detail</a>
+            </td>
+        </tr>
+
+        <tr th:if="${vehicles == null or #lists.isEmpty(vehicles)}">
+            <td colspan="9" class="empty">Tidak ada kendaraan.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

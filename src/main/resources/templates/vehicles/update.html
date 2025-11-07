@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Update Vehicle - Vehicle Rental App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 32px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-top: 12px;
+            font-weight: 600;
+            color: #2f6f4a;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-top: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.15);
+            outline: none;
+        }
+
+        .actions {
+            margin-top: 28px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-save {
+            background: #28a745;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+        }
+
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .error {
+            color: #c0392b;
+            margin-top: 6px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2>Update Vehicle</h2>
+
+    <form th:action="@{/vehicles/{id}/update(id=${vehicle.id})}" th:object="${updateVehicle}" method="post">
+
+        <div>
+            <label>Type</label>
+            <input type="text" th:field="*{type}" placeholder="e.g. SUV, MPV, Sedan"/>
+        </div>
+
+        <div>
+            <label>Brand</label>
+            <input type="text" th:field="*{brand}" placeholder="e.g. Toyota, Honda"/>
+        </div>
+
+        <div>
+            <label>Model</label>
+            <input type="text" th:field="*{model}" placeholder="e.g. Avanza"/>
+        </div>
+
+        <div>
+            <label>Production Year</label>
+            <input type="number" th:field="*{productionYear}" min="1980" max="2100"/>
+        </div>
+
+        <div>
+            <label>License Plate</label>
+            <input type="text" th:field="*{licensePlate}" placeholder="e.g. B1234XYZ"/>
+        </div>
+
+        <div>
+            <label>Capacity</label>
+            <input type="number" th:field="*{capacity}" placeholder="e.g. 5"/>
+        </div>
+
+        <div>
+            <label>Transmission</label>
+            <input type="text" th:field="*{transmission}" placeholder="Manual / Automatic"/>
+        </div>
+
+        <div>
+            <label>Fuel Type</label>
+            <input type="text" th:field="*{fuelType}" placeholder="Bensin / Diesel / Hybrid / Listrik"/>
+        </div>
+
+        <div>
+            <label>Price per Day</label>
+            <input type="number" step="0.01" th:field="*{price}" placeholder="e.g. 500000"/>
+        </div>
+
+        <div>
+            <label>Status</label>
+            <select th:field="*{status}">
+                <option value="Available">Available</option>
+                <option value="In Use">In Use</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Vendor</label>
+            <select th:field="*{rentalVendorId}">
+                <option value="">-- Select Vendor --</option>
+                <option th:each="v : ${vendors}" th:value="${v.id}" th:text="${v.name}">Vendor</option>
+            </select>
+        </div>
+
+        <div class="actions">
+            <a href="/vehicles" class="btn btn-cancel">Cancel</a>
+            <button type="submit" class="btn btn-save">Save</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

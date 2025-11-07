@@ -1,0 +1,84 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Choose Add-Ons</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    .card-centered { max-width: 720px; margin: 24px auto; }
+    .addon-item { border-bottom:1px solid #eee; padding:8px 0; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card card-centered shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title text-success">Choose Add-Ons</h5>
+
+      <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+      <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+
+      <!-- Show selected vehicle summary -->
+      <div th:if="${selectedVehicle != null}" class="mb-3">
+        <strong>Selected Vehicle:</strong>
+        <div th:text="${selectedVehicle.brand} + ' ' + (selectedVehicle.model ?: '')"></div>
+        <div class="text-muted small" th:text="'Type: ' + selectedVehicle.type + ' • Capacity: ' + selectedVehicle.capacity"></div>
+      </div>
+
+      <!-- Form to save booking (posts to /bookings/create/save) -->
+      <form th:action="@{/bookings/create/save}" method="post" th:object="${createReq}">
+        <!-- Keep all createReq fields as hidden inputs so service receives them -->
+        <input type="hidden" th:field="*{vehicleId}"/>
+        <input type="hidden" th:field="*{pickUpTime}"
+               th:value="${createReq.pickUpTime != null} ? ${#dates.format(createReq.pickUpTime, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+        <input type="hidden" th:field="*{dropOffTime}"
+               th:value="${createReq.dropOffTime != null} ? ${#dates.format(createReq.dropOffTime, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+        <input type="hidden" th:field="*{pickUpLocation}"/>
+        <input type="hidden" th:field="*{dropOffLocation}"/>
+        <input type="hidden" th:field="*{capacityNeeded}"/>
+        <input type="hidden" th:field="*{transmissionNeeded}"/>
+        <input type="hidden" th:field="*{includeDriver}"/>
+
+        <div class="mb-3">
+          <label class="form-label"><strong>Available Add-Ons</strong></label>
+          <div th:if="${#lists.isEmpty(addOns)}" class="text-muted">No add-ons available.</div>
+          <div th:each="a : ${addOns}" class="addon-item row">
+            <div class="col-1">
+              <!-- name "addonIds" multiple -> will bind to List<String> -->
+              <input type="checkbox" th:id="${'addon-' + a.id}" name="addonIds" th:value="${a.id}" class="form-check-input"/>
+            </div>
+            <div class="col-8">
+              <label th:for="${'addon-' + a.id}" th:text="${a.name}">Addon name</label>
+            </div>
+            <div class="col-3 text-end text-success" th:text="${#numbers.formatDecimal(a.price,0,'COMMA',2,'POINT')}">Rp 0,00</div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <!-- Previous: go back to create page with same createReq by POSTing to /bookings/create -->
+          <form id="backForm" th:action="@{/bookings/create}" method="post" style="display:inline;">
+            <input type="hidden" th:field="*{vehicleId}"/>
+            <input type="hidden" th:field="*{pickUpTime}"
+                   th:value="${createReq.pickUpTime != null} ? ${#dates.format(createReq.pickUpTime, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+            <input type="hidden" th:field="*{dropOffTime}"
+                   th:value="${createReq.dropOffTime != null} ? ${#dates.format(createReq.dropOffTime, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+            <input type="hidden" th:field="*{pickUpLocation}"/>
+            <input type="hidden" th:field="*{dropOffLocation}"/>
+            <input type="hidden" th:field="*{capacityNeeded}"/>
+            <input type="hidden" th:field="*{transmissionNeeded}"/>
+            <input type="hidden" th:field="*{includeDriver}"/>
+            <button type="submit" class="btn btn-outline-secondary">Previous</button>
+          </form>
+
+          <div>
+            <button type="submit" class="btn btn-success">Save</button>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Vehicle Detail - Vehicle Rental App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            background: #f6f8fa;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 28px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-update {
+            background: #28a745;
+        }
+        .btn-delete {
+            background: #dc3545;
+            margin-left: 8px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 12px;
+        }
+        .item {
+            margin-bottom: 14px;
+        }
+        .label {
+            color: #666;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .value {
+            font-size: 15px;
+            margin-top: 6px;
+        }
+        .back {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            padding: 12px;
+            background: #6c757d;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .price {
+            color: #198754;
+            font-weight: 800;
+        }
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="header">
+        <div class="title">Vehicle Details</div>
+        <div>
+            <a th:href="@{/vehicles/{id}/update(id=${vehicle.id})}" class="btn btn-update">Update Vehicle</a>
+            <form th:action="@{/vehicles/{id}/delete(id=${vehicle.id})}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-delete"
+                        onclick="return confirm('Yakin ingin menghapus kendaraan ini?');">
+                    Delete Vehicle
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div>
+            <div class="item">
+                <div class="label">Vehicle ID</div>
+                <div class="value" th:text="${vehicle.id}">VEH0002</div>
+            </div>
+            <div class="item">
+                <div class="label">Vehicle Type</div>
+                <div class="value" th:text="${vehicle.type}">MPV</div>
+            </div>
+            <div class="item">
+                <div class="label">Vehicle Model</div>
+                <div class="value" th:text="${vehicle.model}">Avanza</div>
+            </div>
+            <div class="item">
+                <div class="label">Location</div>
+                <div class="value" th:text="${vehicle.location}">DKI Jakarta</div>
+            </div>
+            <div class="item">
+                <div class="label">Capacity</div>
+                <div class="value" th:text="${vehicle.capacity + ' orang'}">8 orang</div>
+            </div>
+            <div class="item">
+                <div class="label">Fuel Type</div>
+                <div class="value" th:text="${vehicle.fuelType}">Bensin</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="item">
+                <div class="label">Vendor Name</div>
+                <div class="value" th:text="${vehicle.vendorName != null ? vehicle.vendorName : '—'}">
+                    Indrajaya, Januar and Winardi
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">Vehicle Brand</div>
+                <div class="value" th:text="${vehicle.brand}">Toyota</div>
+            </div>
+            <div class="item">
+                <div class="label">Vehicle Production Year</div>
+                <div class="value" th:text="${vehicle.productionYear}">2020</div>
+            </div>
+            <div class="item">
+                <div class="label">License Plate</div>
+                <div class="value" th:text="${vehicle.licensePlate}">B123AP</div>
+            </div>
+            <div class="item">
+                <div class="label">Transmission</div>
+                <div class="value" th:text="${vehicle.transmission}">Manual</div>
+            </div>
+            <div class="item">
+                <div class="label">Price per Day</div>
+                <div class="value price"
+                     th:text="${#numbers.formatDecimal(vehicle.price, 0, 'COMMA', 2, 'POINT')}">Rp 750.000,00
+                </div>
+            </div>
+            <div class="item">
+                <div class="label">Status</div>
+                <div class="value" th:text="${vehicle.status}">Available</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="/vehicles" class="back">Back</a>
+</div>
+</body>
+</html>
