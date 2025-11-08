@@ -452,4 +452,54 @@ public class RentalBookingServiceImpl implements RentalBookingService {
         RentalBooking saved = bookingRepository.save(booking);
         return saved;
     }
+
+    @Override
+    public Map<String, Object> getBookingStats(String period, int year) {
+        // normalize period
+        String p = (period == null) ? "monthly" : period.trim().toLowerCase();
+        if (!p.equals("monthly") && !p.equals("quarterly")) {
+            p = "monthly";
+        }
+
+        List<String> labels = new ArrayList<>();
+        int[] counts;
+
+        if (p.equals("monthly")) {
+            labels = Arrays.asList("January","February","March","April","May","June","July","August","September","October","November","December");
+            counts = new int[12];
+        } else {
+            labels = Arrays.asList("Q1","Q2","Q3","Q4");
+            counts = new int[4];
+        }
+        
+        List<RentalBooking> all = bookingRepository.findAllActive();
+
+        for (RentalBooking b : all) {
+            LocalDateTime created = b.getCreatedAt();
+            // fallback: jika createdAt null, gunakan pickUpTime sebagai last resort
+            if (created == null) created = b.getPickUpTime();
+            if (created == null) continue;
+
+            int y = created.getYear();
+            if (y != year) continue;
+
+            int month = created.getMonthValue(); // 1..12
+            if (p.equals("monthly")) {
+                counts[month - 1] += 1;
+            } else {
+                int qIndex = (month - 1) / 3; // 0..3
+                counts[qIndex] += 1;
+            }
+        }
+
+        List<Integer> data = new ArrayList<>();
+        for (int c : counts) data.add(c);
+
+        Map<String, Object> out = new HashMap<>();
+        out.put("labels", labels);
+        out.put("data", data);
+        out.put("period", p);
+        out.put("year", year);
+        return out;
+    }
 }

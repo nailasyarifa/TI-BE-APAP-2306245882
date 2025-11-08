@@ -43,6 +43,15 @@
       margin: 0 auto;
       padding: 2rem;
     }
+    .btn-statistics {
+      background-color: #6c757d;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
     
     .btn-create {
       background-color: var(--primary-green);
@@ -188,7 +197,7 @@
     
     .page-numbers button {
       padding: 0.4rem 0.75rem;
-      border: 1px solid #dee2e6;
+      border: 1.5px solid #bdbdbd;
       background-color: white;
       color: #495057;
       border-radius: 4px;
@@ -227,7 +236,12 @@
   <!-- Main Content -->
   <div class="container-custom">
     <div th:if="${success}" class="alert-success-custom" th:text="${success}"></div>
-    <a class="btn-create" th:href="@{/bookings/create}">Create A New Booking</a>
+    
+    <div class="button-group">
+      <a class="btn-create" th:href="@{/bookings/create}">Create A New Booking</a>
+      <a class="btn-statistics" th:href="@{/bookings/chart}">Statistics</a>
+    </div>
+
     <div class="table-controls">
       <div class="show-entries">
       </div>

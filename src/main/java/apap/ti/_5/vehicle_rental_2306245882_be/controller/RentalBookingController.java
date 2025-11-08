@@ -502,5 +502,20 @@ public class RentalBookingController {
         return "bookings/delete-result";
     }
 
- 
+    @GetMapping("/chart")
+    public String viewBookingChart(Model model,
+                                @RequestParam(name="period", required=false, defaultValue="monthly") String period,
+                                @RequestParam(name="year", required=false) Integer year) {
+        int currentYear = LocalDateTime.now().getYear();
+        if (year == null) year = currentYear;
+
+        // buat pilihan tahun (mis. dari currentYear-5 .. currentYear)
+        List<Integer> years = new ArrayList<>();
+        for (int y = currentYear; y >= currentYear - 5; y--) years.add(y);
+
+        model.addAttribute("selectedPeriod", period);
+        model.addAttribute("selectedYear", year);
+        model.addAttribute("years", years);
+        return "bookings/chart";
+    }
 }
