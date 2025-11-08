@@ -5,7 +5,6 @@
     <title>Vehicles - Vehicle Rental App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Inline CSS sederhana supaya langsung jalan -->
     <style>
         body { font-family: "Helvetica Neue", Arial, sans-serif; background:#f6f8fa; margin:0; color:#333; }
         .container { max-width:1100px; margin:40px auto; background:#fff; padding:28px; box-shadow:0 6px 18px rgba(0,0,0,0.06); border-radius:8px; }
@@ -37,11 +36,9 @@
     </style>
 
     <script>
-        // Kirim form GET saat tekan enter pada search
         function submitFilter() {
             document.getElementById('filterForm').submit();
         }
-        // optional: clear search
         function clearSearch() {
             document.getElementById('q').value = '';
             submitFilter();
@@ -49,6 +46,9 @@
     </script>
 </head>
 <body>
+    <!-- Navigation -->
+  <div th:replace="~{navbar :: navbar('vehicles')}"></div>
+
 <div class="container">
     <div class="top-bar">
         <div>

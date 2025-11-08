@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <style>
+    .navbar-custom {
+      background-color: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 1rem 2rem;
+    }
+
+    .navbar-brand {
+      color: var(--primary-green) !important;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-link-custom {
+      color: #6c757d;
+      margin-left: 2rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    /* Warna saat hover */
+    .nav-link-custom:hover {
+      color: var(--primary-green);
+    }
+
+    /* Warna saat aktif */
+    .nav-link-custom.active {
+      color: var(--primary-green);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar Fragment -->
+  <nav class="navbar-custom" th:fragment="navbar(activePage)">
+    <div class="container-custom" style="padding: 0;">
+      <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+        <div class="navbar-brand">Vehicle Rental App</div>
+        <div style="display: flex; gap: 2rem;">
+          <a th:classappend="${activePage == 'home'} ? ' active'" href="/home" class="nav-link-custom">Home</a>
+          <a th:classappend="${activePage == 'vehicles'} ? ' active'" href="/vehicles" class="nav-link-custom">Vehicles</a>
+          <a th:classappend="${activePage == 'bookings'} ? ' active'" href="/bookings" class="nav-link-custom">Bookings</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</body>
+</html>

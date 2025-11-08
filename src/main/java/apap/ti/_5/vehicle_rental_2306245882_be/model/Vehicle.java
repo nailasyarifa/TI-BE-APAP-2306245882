@@ -69,7 +69,9 @@ public class Vehicle {
 
     @PrePersist
     public void prePersist() {
-        if (id == null || id.isBlank()) id = UUID.randomUUID().toString();
+        if (id == null || id.isBlank()) {
+            id = UUID.randomUUID().toString(); // hanya kalau belum di-set
+        }
         if (createdAt == null) createdAt = LocalDateTime.now();
         updatedAt = createdAt;
     }

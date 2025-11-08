@@ -23,13 +23,13 @@ public class RentalBooking {
     @Column(name = "pick_up_time")
     private LocalDateTime pickUpTime;
 
-    @Column(name = "drop_of_time")
+    @Column(name = "drop_off_time")
     private LocalDateTime dropOffTime;
 
     @Column(name = "pick_up_location")
     private String pickUpLocation;
 
-    @Column(name = "drop_of_location")
+    @Column(name = "drop_off_location")
     private String dropOffLocation;
 
     @Column(name = "capacity_needed")
@@ -49,7 +49,7 @@ public class RentalBooking {
 
     // Many-to-many mapping to addon via join table
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "booking_addons",
+    @JoinTable(name = "booking_addon",
         joinColumns = @JoinColumn(name = "booking_id"),
         inverseJoinColumns = @JoinColumn(name = "addon_id"))
     private List<RentalAddOn> listOfAddOns;
@@ -71,9 +71,16 @@ public class RentalBooking {
     public void preUpdate(){ updatedAt = LocalDateTime.now(); }
 
     private String generateId(){
-        // simple: VR + timestamp-based - in production, ensure sequential format VR000001
-        return "VR" + String.valueOf(Math.abs(UUID.randomUUID().getMostSignificantBits())).replace("-","");
+        long suffix = System.currentTimeMillis() % 1_000_000L;
+        return String.format("VR%06d", suffix); // ex: VR123456
     }
 
     public enum BookingStatus { UPCOMING, ONGOING, DONE }
+
+    // @Column(name="deleted", nullable=false)
+
+    // private boolean deleted = false;    
+    // public boolean isDeleted(){ return deleted; }
+    // public void setDeleted(boolean d){ this.deleted = d; }
+
 }

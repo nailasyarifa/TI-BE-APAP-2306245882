@@ -11,8 +11,37 @@
   <style>
     :root{
       --green: #2f9a46;
+      --primary-green: #198754; 
       --soft-green: #ecf9ef;
       --card-radius: 14px;
+    }
+
+    .navbar-custom {
+      background-color: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 1rem 2rem;
+    }
+
+    .navbar-brand {
+      color: var(--primary-green) !important;
+      font-weight: 600;
+      font-size: 1.25rem;
+    }
+
+    .nav-link-custom {
+      color: #6c757d;
+      margin-left: 2rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link-custom:hover {
+      color: var(--primary-green);
+    }
+
+    .nav-link-custom.active {
+      color: var(--primary-green);
     }
 
     body{
@@ -118,7 +147,8 @@
   </style>
 </head>
 <body>
-  <!-- <div th:replace="fragments/navbar :: navbar"></div> -->
+<!-- Navigation -->
+<div th:replace="~{navbar :: navbar('home')}"></div>
   <div class="hero-wrap">
     <div class="hero-card">
       <div class="hero-title">

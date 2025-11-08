@@ -1,0 +1,100 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>Update Booking</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    <div class="card mx-auto" style="max-width:520px;">
+      <div class="card-body">
+        <h5 class="card-title">Update Booking</h5>
+
+        <form th:action="@{/bookings/update-details}" method="post">
+          <!-- use hidden _method to indicate PUT (Spring HiddenHttpMethodFilter) -->
+          <input type="hidden" name="_method" value="put" />
+          <input type="hidden" th:name="id" th:value="${updateReq.id}"/>
+
+          <div class="mb-2 form-check">
+            <input type="checkbox" class="form-check-input" th:checked="${updateReq.includeDriver}" th:name="includeDriver" />
+            <label class="form-check-label">Include Driver</label>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Pick-up Location</label>
+            <select class="form-select" th:name="pickUpLocation">
+              <option th:each="loc : ${locations}" th:value="${loc}" th:text="${loc}" th:selected="${loc == updateReq.pickUpLocation}"></option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Drop-off Location</label>
+            <select class="form-select" th:name="dropOffLocation">
+              <option th:each="loc : ${locations}" th:value="${loc}" th:text="${loc}" th:selected="${loc == updateReq.dropOffLocation}"></option>
+            </select>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Pick-up Time</label>
+            <input type="datetime-local" class="form-control" th:name="pickUpTime"
+                   th:value="${#temporals.format(updateReq.pickUpTime,'yyyy-MM-dd''T''HH:mm')}" />
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Drop-off Time</label>
+            <input type="datetime-local" class="form-control" th:name="dropOffTime"
+                   th:value="${#temporals.format(updateReq.dropOffTime,'yyyy-MM-dd''T''HH:mm')}" />
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Capacity Needed</label>
+            <input type="number" class="form-control" th:name="capacityNeeded" th:value="${updateReq.capacityNeeded}" />
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label">Transmission</label>
+            <div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="transmission" value="Manual"
+                       th:checked="${updateReq.transmission != null and updateReq.transmission.equalsIgnoreCase('Manual')}" />
+                <label class="form-check-label">Manual</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="transmission" value="Automatic"
+                       th:checked="${updateReq.transmission != null and updateReq.transmission.equalsIgnoreCase('Automatic')}" />
+                <label class="form-check-label">Automatic</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add-on selection (checkboxes) -->
+          <div class="mb-2">
+            <label class="form-label">Add-Ons</label>
+            <div th:each="ao : ${addOns}">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" th:name="addonIds"
+                       th:value="${ao.id}" th:checked="${updateReq.addonIds != null and updateReq.addonIds.contains(ao.id.toString())}" />
+                <label class="form-check-label" th:text="${ao.name}"></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- optional: show current selected vehicle (readonly) -->
+          <div class="mb-2">
+            <label class="form-label">Selected Vehicle</label>
+            <div class="form-control-plaintext"><a th:href="@{/vehicles/{id}(id=${updateReq.vehicleId})}" th:text="${updateReq.vehicleId}"></a></div>
+            <input type="hidden" th:name="vehicleId" th:value="${updateReq.vehicleId}" />
+          </div>
+
+          <div class="d-grid gap-2">
+            <button class="btn btn-success" type="submit">Save Changes</button>
+            <a th:href="@{/bookings/{id}(id=${updateReq.id})}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -55,8 +55,31 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleResponseDTO create(CreateVehicleRequestDTO req) {
+        // Ambil kendaraan terakhir berdasarkan ID (descending)
+        Optional<Vehicle> lastVehicleOpt = vehicleRepository.findTopByOrderByIdDesc();
+        String newId;
+
+        if (lastVehicleOpt.isPresent()) {
+            String lastId = lastVehicleOpt.get().getId();
+            // Pastikan ID berformat VEHxxxx
+            if (lastId.startsWith("VEH") && lastId.length() >= 7) {
+                try {
+                    int lastNum = Integer.parseInt(lastId.substring(3));
+                    newId = String.format("VEH%04d", lastNum + 1);
+                } catch (NumberFormatException e) {
+                    // fallback ke VEH0021 kalau parsing gagal
+                    newId = "VEH0021";
+                }
+            } else {
+                newId = "VEH0021";
+            }
+        } else {
+            // Jika belum ada data sama sekali
+            newId = "VEH0021";
+        }
+
         Vehicle v = new Vehicle();
-        // set fields
+        v.setId(newId); // assign custom ID di sini
         v.setType(req.getType());
         v.setBrand(req.getBrand());
         v.setModel(req.getModel());
@@ -68,11 +91,12 @@ public class VehicleServiceImpl implements VehicleService {
         v.setFuelType(req.getFuelType());
         v.setPrice(req.getPrice());
         v.setStatus(req.getStatus() == null ? "Available" : req.getStatus());
+        v.setDeleted(false);
 
-        // rentalVendorId expected as Integer (because RentalVendor.id is Integer)
+        // Handle vendor
         if (req.getRentalVendorId() != null) {
             Long vendorId = req.getRentalVendorId();
-        Optional<RentalVendor> maybeVendor = rentalVendorRepository.findById(vendorId);
+            Optional<RentalVendor> maybeVendor = rentalVendorRepository.findById(vendorId);
 
             if (maybeVendor.isPresent()) {
                 v.setRentalVendor(maybeVendor.get());
@@ -84,6 +108,7 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle saved = vehicleRepository.save(v);
         return toDto(saved);
     }
+
 
     @Override
     @Transactional

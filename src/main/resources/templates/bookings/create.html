@@ -6,185 +6,19 @@
   <title>Create Booking</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <style>
-    body {
-      background-color: #f5f5f5;
-      padding: 20px 0;
-    }
-    
-    .booking-container {
-      max-width: 650px;
-      margin: 0 auto;
-    }
-    
-    .booking-card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    
-    .card-header-custom {
-      padding: 30px 25px;
-      border-bottom: 1px solid #000;
-    }
-    
-    .card-header-custom h3 {
-      margin: 0;
-      color: #00a651;
-      font-size: 24px;
-      font-weight: 600;
-    }
-    
-    .card-body-custom {
-      padding: 25px;
-    }
-    
-    .form-label {
-      color: #00a651;
-      font-weight: 600;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-    
-    .form-control, .form-select {
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 10px 12px;
-      font-size: 15px;
-    }
-    
-    .form-control:focus, .form-select:focus {
-      border-color: #00a651;
-      box-shadow: 0 0 0 0.2rem rgba(0, 166, 81, 0.15);
-    }
-    
-    .form-check-label {
-      color: #666;
-      font-weight: 400;
-    }
-    
-    .transmission-group {
-      display: flex;
-      gap: 10px;
-      margin-top: 5px;
-    }
-    
-    .form-check-inline {
-      margin: 0;
-    }
-    
-    .btn-search {
-      background-color: #00a651;
-      border: none;
-      border-radius: 4px;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: 500;
-      color: white;
-      width: 100%;
-      margin-top: 15px;
-    }
-    
-    .btn-search:hover {
-      background-color: #008d45;
-    }
-    
-    .section-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      margin-top: 30px;
-    }
-    
-    .vehicle-card {
-      background: #e8f5e9;
-      border: 1px solid #c8e6c9;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 12px;
-    }
-    
-    .vehicle-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-    
-    .vehicle-type {
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 8px;
-    }
-    
-    .vehicle-price {
-      color: #00a651;
-      font-size: 18px;
-      font-weight: 700;
-    }
-    
-    .price-details-card {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 20px;
-      margin-top: 15px;
-    }
-    
-    .price-details-title {
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-    
-    .price-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-    
-    .grand-total-row {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid #ddd;
-      font-weight: 600;
-    }
-    
-    .grand-total-amount {
-      color: #00a651;
-      font-size: 20px;
-      font-weight: 700;
-    }
-    
-    .btn-proceed {
-      background-color: #007bff;
-      border: none;
-      border-radius: 4px;
-      padding: 12px 30px;
-      font-size: 16px;
-      font-weight: 500;
-      color: white;
-    }
-    
-    .btn-proceed:hover {
-      background-color: #0056b3;
-    }
-    
-    .btn-cancel {
-      background: white;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      padding: 12px 30px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #666;
-      text-decoration: none;
-      display: inline-block;
-    }
-    
-    .btn-cancel:hover {
-      background-color: #f5f5f5;
-      color: #666;
-    }
+    body { background-color: #f5f5f5; padding: 20px 0; }
+    .booking-container { max-width: 700px; margin: 0 auto; }
+    .booking-card { background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .card-header-custom { padding: 22px 20px; border-bottom: 1px solid #eee; }
+    .card-header-custom h3 { margin: 0; color: #00a651; font-size: 22px; font-weight: 600; }
+    .card-body-custom { padding: 22px; }
+    .vehicle-card { background: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .vehicle-title { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+    .vehicle-price { color: #00a651; font-size: 16px; font-weight: 700; }
+    .price-details-card { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin-top: 12px; }
+    .btn-search { background-color: #00a651; border: none; border-radius: 4px; padding: 12px; font-size: 16px; color: white; width: 100%; margin-top: 12px; }
+    .btn-proceed { background-color: #007bff; border: none; border-radius: 4px; padding: 10px 20px; color: white; }
+    .btn-cancel { background: white; border: 1px solid #ddd; border-radius: 4px; padding: 10px 18px; color: #666; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -194,16 +28,19 @@
       <div class="card-header-custom">
         <h3>Create a New Booking</h3>
       </div>
-      
+
       <div class="card-body-custom">
-        <!-- Flash messages -->
         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
         <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
         <div th:if="${info}" class="alert alert-info" th:text="${info}"></div>
 
-        <!-- MAIN FORM -->
+        <!-- MAIN FORM (search) -->
         <form th:object="${createReq}" th:action="@{/bookings/create}" method="post" id="mainForm">
-          
+          <!-- CSRF hidden: only render if _csrf is available -->
+          <div th:if="${_csrf != null}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+          </div>
+
           <div class="mb-3">
             <div class="form-check">
               <input type="checkbox" class="form-check-input" th:field="*{includeDriver}" id="includeDriver"/>
@@ -230,13 +67,13 @@
           <div class="mb-3">
             <label class="form-label">Pick-up Time</label>
             <input type="datetime-local" class="form-control" th:field="*{pickUpTime}"
-                   th:value="${createReq.pickUpTime != null} ? ${#dates.format(createReq.pickUpTime, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+                   th:value="${createReq.pickUpTime != null ? #temporals.format(createReq.pickUpTime, 'yyyy-MM-dd''T''HH:mm') : ''}"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label">Drop-off Time</label>
             <input type="datetime-local" class="form-control" th:field="*{dropOffTime}"
-                   th:value="${createReq.dropOffTime != null} ? ${#dates.format(createReq.dropOffTime, 'yyyy-MM-dd\'T\'HH:mm')} : ''"/>
+                   th:value="${createReq.dropOffTime != null ? #temporals.format(createReq.dropOffTime, 'yyyy-MM-dd''T''HH:mm') : ''}"/>
           </div>
 
           <div class="mb-3">
@@ -256,6 +93,7 @@
             </div>
           </div>
 
+          <!-- keep vehicleId hidden in main form (JS will set chosen vehicleId to proceedForm) -->
           <input type="hidden" th:field="*{vehicleId}" id="vehicleIdHidden"/>
 
           <button type="submit" class="btn-search">Search for Vehicles</button>
@@ -263,56 +101,54 @@
 
         <!-- SEARCH RESULTS -->
         <div th:if="${vehicles != null}">
-          <div class="section-title">Available Vehicles</div>
-          
+          <div class="mt-4 mb-2"><strong>Available Vehicles</strong></div>
+
           <div th:if="${#lists.isEmpty(vehicles)}" class="text-muted text-center py-3">
             No vehicles matched your criteria.
           </div>
 
           <div th:each="v,iterStat : ${vehicles}">
-            <div class="vehicle-card">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="flex-grow-1">
-                  <div class="vehicle-title" th:text="${v.brand} + ' ' + ${v.model} + ' (' + ${v.type} + ')'">
-                    Toyota Avanza (MPV)
-                  </div>
-                  <div style="font-size: 14px; color: #333; margin-top: 5px;">
+            <div class="vehicle-card" th:attr="data-price-per-day=${v.pricePerDay}, data-total=${v.totalPrice}">
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <div class="vehicle-title" th:text="${v.brand} + ' ' + ${v.model} + ' (' + ${v.type} + ')'"></div>
+                  <div style="font-size: 13px; color: #333; margin-top: 4px;">
                     Capacity: <span th:text="${v.capacity}">4</span>
+                    &nbsp; • &nbsp; Transmission: <span th:text="${v.transmission}">Auto</span>
                   </div>
                 </div>
                 <div class="text-end ms-3">
                   <div style="font-size: 12px; color: #666;">Total Price:</div>
-                  <div class="vehicle-price" th:text="'Rp ' + ${#numbers.formatDecimal(v.totalPrice, 0, 'COMMA', 2, 'POINT')}">
-                    Rp 1.500.000,00
-                  </div>
+                  <div class="vehicle-price" th:text="'Rp ' + ${#numbers.formatDecimal(v.totalPrice, 0, 'COMMA', 2, 'POINT')}">Rp 0,00</div>
                 </div>
               </div>
               <div class="form-check mt-2">
-                <input class="form-check-input" type="radio" 
-                       name="selectedVehicle" th:value="${v.id}" 
-                       th:id="${'veh-' + iterStat.index}"/>
-                <label class="form-check-label" th:for="${'veh-' + iterStat.index}">Select</label>
+                <!-- plain radio: JS will copy chosen into proceedForm.vehicleId -->
+                <input class="form-check-input" type="radio" name="selectedVehicle" th:value="${v.id}" th:id="${'veh-' + iterStat.index}"/>
+                <label class="form-check-label" th:for="${'veh-' + iterStat.index}"> Select </label>
               </div>
             </div>
           </div>
 
-          <!-- Price Details -->
-          <div class="price-details-card">
-            <div class="price-details-title">Booking Price Details</div>
-            <div class="price-row">
-              <div>Price per Day (<span th:text="${rentalDays}">2</span> day(s))</div>
-              <div th:text="${vehicles.size() > 0 ? 'Rp ' + #numbers.formatDecimal(vehicles.get(0).pricePerDay, 0, 'COMMA', 2, 'POINT') : 'Rp 0,00'}">
-                Rp 1.500.000,00
-              </div>
+          <!-- PRICE DETAILS -->
+          <div class="price-details-card" th:attr="data-rental-days=${rentalDays}">
+            <div style="font-weight:600; margin-bottom:8px;">Booking Price Details</div>
+            <div style="display:flex; justify-content:space-between;">
+              <div>Price per Day (<span th:text="${rentalDays}">0</span> day(s))</div>
+              <div id="pricePerDayDisplay">Rp 0,00</div>
             </div>
-            <div class="grand-total-row">
+            <div style="display:flex; justify-content:space-between; margin-top:12px; font-weight:700;">
               <div>Grand Total</div>
-              <div class="grand-total-amount" id="grandTotal">-</div>
+              <div id="grandTotal">-</div>
             </div>
           </div>
 
-          <!-- PROCEED FORM -->
-          <form id="proceedForm" th:action="@{/bookings/create/proceed}" method="post"></form>
+          <!-- PROCEED FORM (JS will populate hidden inputs and submit to /bookings/create/proceed) -->
+          <form id="proceedForm" th:action="@{/bookings/create/proceed}" method="post">
+            <div th:if="${_csrf != null}">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            </div>
+          </form>
 
           <div class="d-flex justify-content-between mt-4">
             <a href="/bookings" class="btn-cancel">Cancel</a>
@@ -326,31 +162,55 @@
 </div>
 
 <script>
+  const DRIVER_COST_PER_DAY = 100000;
+
+  function formatRupiah(amount) {
+    if (amount == null || Number.isNaN(Number(amount))) return 'Rp 0,00';
+    return 'Rp ' + Number(amount).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
   function copyMainToProceed() {
     const main = document.getElementById('mainForm');
     const proceed = document.getElementById('proceedForm');
+    // simpan CSRF jika ada
+    const csrf = proceed.querySelector('input[name="_csrf"]');
     proceed.innerHTML = '';
+    if (csrf) proceed.appendChild(csrf);
 
-    const elements = main.querySelectorAll('input,select,textarea');
-    elements.forEach(el => {
-      if (el.name === 'selectedVehicle') return;
-      if (el.type === 'submit' || el.type === 'button') return;
-      
-      if (el.type === 'checkbox') {
-        const hidden = document.createElement('input');
-        hidden.type = 'hidden';
-        hidden.name = el.name;
-        hidden.value = el.checked ? 'true' : 'false';
-        proceed.appendChild(hidden);
-      } else {
-        const hidden = document.createElement('input');
-        hidden.type = 'hidden';
-        hidden.name = el.getAttribute('name') || el.getAttribute('th:field') || el.id;
-        hidden.value = el.value || '';
-        proceed.appendChild(hidden);
+    // Daftar nama field yang wajib disalin (sesuaikan dengan DTO names)
+    const names = ['pickUpLocation','dropOffLocation','pickUpTime','dropOffTime','capacityNeeded','transmissionNeeded','includeDriver'];
+
+    names.forEach(name => {
+      // coba ambil elemen di main form: by name first, else by id
+      let el = main.querySelector('[name="'+name+'"]') || document.getElementById(name) || main.querySelector('#' + name);
+      if (!el) {
+        // jika tidak ada, coba th:field hidden yang mungkin ada dengan id
+        el = main.querySelector('input[id="'+name+'"]');
       }
+      if (!el) return;
+
+      // Ambil nilai: untuk checkbox harus 'true'/'false'
+      let value = '';
+      if (el.type === 'checkbox') value = el.checked ? 'true' : 'false';
+      else value = el.value || '';
+
+      // pastikan tidak kosong untuk field wajib (pickUpTime/dropOffTime)
+      if ((name === 'pickUpTime' || name === 'dropOffTime') && (value === null || value.trim() === '')) {
+        // beri peringatan supaya user tahu
+        // (atau kamu bisa throw dan redirect ke create dengan error message)
+        alert('Pick-up time and Drop-off time harus terisi sebelum melanjutkan.');
+        throw new Error('datetime-missing');
+      }
+
+      // buat hidden input
+      const hidden = document.createElement('input');
+      hidden.type = 'hidden';
+      hidden.name = name;
+      hidden.value = value;
+      proceed.appendChild(hidden);
     });
 
+    // ambil selected vehicle radio dan tambahkan vehicleId
     const selected = document.querySelector('input[name="selectedVehicle"]:checked');
     if (selected) {
       const hv = document.createElement('input');
@@ -361,36 +221,49 @@
     }
   }
 
+
   function updateGrandTotal() {
     const sel = document.querySelector('input[name="selectedVehicle"]:checked');
-    
+    const priceDetailsCard = document.querySelector('.price-details-card');
+    const rentalDays = priceDetailsCard ? Number(priceDetailsCard.getAttribute('data-rental-days') || 0) : 0;
+
     if (!sel) {
       document.getElementById('grandTotal').textContent = '-';
+      document.getElementById('pricePerDayDisplay').textContent = 'Rp 0,00';
       return;
     }
-    
+
     const row = sel.closest('.vehicle-card');
     if (!row) return;
-    const priceText = row.querySelector('.vehicle-price').textContent.trim();
-    document.getElementById('grandTotal').textContent = priceText;
+
+    const pricePerDayRaw = row.getAttribute('data-price-per-day');
+    const pricePerDay = Number(pricePerDayRaw) || 0;
+
+    const includeDriverCheckbox = document.getElementById('includeDriver');
+    const includeDriver = includeDriverCheckbox ? includeDriverCheckbox.checked : false;
+
+    const vehicleCost = pricePerDay * Math.max(1, rentalDays);
+    const driverCost = includeDriver ? (DRIVER_COST_PER_DAY * Math.max(1, rentalDays)) : 0;
+    const total = Math.round((vehicleCost + driverCost) * 100) / 100;
+
+    document.getElementById('pricePerDayDisplay').textContent = formatRupiah(pricePerDay);
+    document.getElementById('grandTotal').textContent = formatRupiah(total);
   }
 
   document.addEventListener('click', function (e) {
-    if (e.target && e.target.classList.contains('form-check-input') && e.target.name === 'selectedVehicle') {
-      updateGrandTotal();
-    }
+    if (e.target && e.target.matches('input[name="selectedVehicle"]')) updateGrandTotal();
     if (e.target && e.target.id === 'proceedBtn') {
       e.preventDefault();
       const selected = document.querySelector('input[name="selectedVehicle"]:checked');
-      if (!selected) {
-        alert('Please select a vehicle first.');
-        return;
-      }
+      if (!selected) { alert('Please select a vehicle first.'); return; }
       copyMainToProceed();
       document.getElementById('proceedForm').submit();
     }
   });
 
+  const includeDriverCheckbox = document.getElementById('includeDriver');
+  if (includeDriverCheckbox) includeDriverCheckbox.addEventListener('change', updateGrandTotal);
+  // initialize if server preselected or radio default
   updateGrandTotal();
 </script>
 </body>

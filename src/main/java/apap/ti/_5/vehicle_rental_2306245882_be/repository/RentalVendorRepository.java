@@ -5,6 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RentalVendorRepository extends JpaRepository<RentalVendor, Long> { 
 
-    // tambahkan custom query kalau perlu, contoh:
-    // List<RentalVendor> findAllByDeletedAtIsNull();
 }

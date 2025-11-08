@@ -1,6 +1,9 @@
 package apap.ti._5.vehicle_rental_2306245882_be.repository;
 
 import apap.ti._5.vehicle_rental_2306245882_be.model.Vehicle;
+
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -40,5 +43,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, String> {
                                                                 @Param("start") java.time.LocalDateTime start,
                                                                 @Param("end") java.time.LocalDateTime end,
                                                                 Pageable pageable);
+
+                                 Optional<Vehicle> findTopByOrderByIdDesc();
                           
 }
