@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * RentalBookingRepository - improved safety:
@@ -57,4 +58,11 @@ public interface RentalBookingRepository extends JpaRepository<RentalBooking, St
             @Param("dropOffTime") LocalDateTime dropOffTime,
             @Param("excludeId") String excludeId
     );
+
+    @Query("SELECT rb FROM RentalBooking rb WHERE rb.id = :id")
+    Optional<RentalBooking> findByIdIncludeDeleted(@Param("id") String id);
+
+    @Query("SELECT rb FROM RentalBooking rb WHERE rb.deleted = false OR rb.deleted IS NULL")
+    List<RentalBooking> findAllActive();
+
 }

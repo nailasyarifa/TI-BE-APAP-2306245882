@@ -60,6 +60,12 @@ public class RentalBooking {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "deleted", nullable = false)
+    private boolean deleted = false;
+
+    public boolean isDeleted(){ return deleted; }
+    public void setDeleted(boolean d){ this.deleted = d; }
+
     @PrePersist
     public void prePersist(){
         if (id == null) id = generateId();
@@ -76,11 +82,5 @@ public class RentalBooking {
     }
 
     public enum BookingStatus { UPCOMING, ONGOING, DONE }
-
-    // @Column(name="deleted", nullable=false)
-
-    // private boolean deleted = false;    
-    // public boolean isDeleted(){ return deleted; }
-    // public void setDeleted(boolean d){ this.deleted = d; }
 
 }

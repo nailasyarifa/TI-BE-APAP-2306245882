@@ -481,24 +481,26 @@ public class RentalBookingController {
         }
     }
 
-    // @PostMapping("/{id}/delete")
-    // public String cancelBookingForm(@PathVariable("id") String id,
-    //                                 RedirectAttributes ra) {
-    //     try {
-    //         RentalBooking cancelled = bookingService.cancelBooking(id);
-    //         ra.addFlashAttribute("success", "Booking " + cancelled.getId() + " berhasil dibatalkan.");
-    //     } catch (BadRequestException e) {
-    //         ra.addFlashAttribute("error", e.getMessage());
-    //     } catch (Exception e) {
-    //         ra.addFlashAttribute("error", "Gagal membatalkan booking: " + e.getMessage());
-    //     }
-    //     return "redirect:/bookings";
-    // }
+    @GetMapping("/{id}/delete")
+    public String cancelBookingView(@PathVariable("id") String id, Model model) {
+        try {
+            RentalBooking canceled = bookingService.cancelBooking(id);
 
-    // // optional: accept real DELETE as well (if you call using AJAX or REST client)
-    // @DeleteMapping("/{id}/delete")
-    // public String cancelBookingDelete(@PathVariable("id") String id, RedirectAttributes ra) {
-    //     return cancelBookingForm(id, ra);
-    // }
+            // update model untuk feedback
+            model.addAttribute("success", "Booking berhasil dibatalkan: " + canceled.getId());
+            model.addAttribute("bookingId", canceled.getId());
+            model.addAttribute("status", "success");
+        } catch (BadRequestException e) {
+            model.addAttribute("error", e.getMessage());
+            model.addAttribute("status", "error");
+        } catch (Exception e) {
+            model.addAttribute("error", "Terjadi kesalahan internal: " + e.getMessage());
+            model.addAttribute("status", "error");
+        }
+
+        // arahkan ke halaman feedback (HTML)
+        return "bookings/delete-result";
+    }
+
  
 }

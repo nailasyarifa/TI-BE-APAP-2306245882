@@ -31,21 +31,5 @@ public class RentalBookingRestController {
         return ResponseEntity.ok(b);
     }
 
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<?> apiCancelBooking(@PathVariable String id) {
-    //     try {
-    //         RentalBooking cancelled = bookingService.cancelBooking(id);
-    //         CancelBookingResponseDTO dto = new CancelBookingResponseDTO(
-    //             cancelled.getId(),
-    //             cancelled.getStatus() != null ? cancelled.getStatus().name() : null,
-    //             cancelled.getTotalPrice(),
-    //             "Booking cancelled"
-    //         );
-    //         return ResponseEntity.ok(dto);
-    //     } catch (BadRequestException e) {
-    //         return ResponseEntity.badRequest().body(Map.of("status",400,"message", e.getMessage()));
-    //     } catch (Exception e) {
-    //         return ResponseEntity.status(500).body(Map.of("status",500,"message","Server error: " + e.getMessage()));
-    //     }
-    // }
+    
 }

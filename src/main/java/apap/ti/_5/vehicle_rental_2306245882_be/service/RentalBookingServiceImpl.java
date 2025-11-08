@@ -226,8 +226,10 @@ public class RentalBookingServiceImpl implements RentalBookingService {
 
     @Override
     public List<BookingListItem> getAllBookingsForList() {
-        List<RentalBooking> all = bookingRepository.findAll();
-        all.sort(Comparator.comparing(RentalBooking::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
+        // List<RentalBooking> all = bookingRepository.findAll();
+        // all.sort(Comparator.comparing(RentalBooking::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
+        List<RentalBooking> all = bookingRepository.findAllActive();
+            all.sort(Comparator.comparing(RentalBooking::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed());
 
         List<BookingListItem> list = new ArrayList<>();
         for (RentalBooking b : all) {
@@ -409,52 +411,45 @@ public class RentalBookingServiceImpl implements RentalBookingService {
         return updateBookingDetails(dto);
     }
 
-    // @Transactional
-    // @Override
-    // public RentalBooking cancelBooking(String id) {
-    //     RentalBooking booking = bookingRepository.findById(id)
-    //             .orElseThrow(() -> new BadRequestException("Booking tidak ditemukan: " + id));
+    @Transactional
+    @Override
+    public RentalBooking cancelBooking(String id) throws BadRequestException {
+        Optional<RentalBooking> ob = bookingRepository.findById(id);
+        if (ob.isEmpty()) {
+            throw new BadRequestException("Booking tidak ditemukan: " + id);
+        }
+        RentalBooking booking = ob.get();
 
-    //     // already deleted?
-    //     try {
-    //         if (booking.isDeleted()) {
-    //             throw new BadRequestException("Booking sudah dibatalkan sebelumnya.");
-    //         }
-    //     } catch (NoSuchMethodError | Exception ignored) {
-    //         // jika entity belum punya isDeleted method -> pastikan entity ada field 'deleted'
-    //     }
+        // hanya boleh cancel jika status UPCOMING
+        if (booking.getStatus() == null || booking.getStatus() != RentalBooking.BookingStatus.UPCOMING) {
+            throw new BadRequestException("Booking hanya dapat dibatalkan ketika status 'Upcoming'.");
+        }
 
-    //     LocalDateTime now = LocalDateTime.now();
-    //     LocalDateTime pickUp = booking.getPickUpTime();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime pickUp = booking.getPickUpTime();
 
-    //     // jika pembatalan sebelum pickUpTime -> reset total price
-    //     if (pickUp != null && now.isBefore(pickUp)) {
-    //         booking.setTotalPrice(0.0);
-    //     }
-    //     // set status ke DONE
-    //     booking.setStatus(RentalBooking.BookingStatus.DONE);
+        // Jika pembatalan sebelum pickUpTime -> totalPrice = 0.0
+        if (pickUp != null && now.isBefore(pickUp)) {
+            booking.setTotalPrice(0.0);
+        }
+        // jika pickUpTime sudah lewat -> totalPrice tetap
 
-    //     // soft delete flag (pastikan field ada di entity)
-    //     try {
-    //         booking.setDeleted(true);
-    //     } catch (NoSuchMethodError | Exception ex) {
-    //         // Jika entity tidak punya field deleted -> kamu harus tambahkan field boolean deleted di entity RentalBooking
-    //         // throw new RuntimeException("Entity RentalBooking tidak punya field deleted. Tambahkan field boolean deleted.");
-    //     }
+        // set status ke DONE, tandai deleted true
+        booking.setStatus(RentalBooking.BookingStatus.DONE);
+        booking.setDeleted(true);
 
-    //     // set vehicle kembali Available (jika ada)
-    //     if (booking.getVehicleId() != null) {
-    //         Optional<Vehicle> ov = vehicleRepository.findById(booking.getVehicleId());
-    //         if (ov.isPresent()) {
-    //             Vehicle v = ov.get();
-    //             try {
-    //                 v.setStatus("Available");
-    //                 vehicleRepository.save(v);
-    //             } catch (Exception ignored) { /* non fatal */ }
-    //         }
-    //     }
+        // set vehicle kembali menjadi Available (langsung)
+        if (booking.getVehicleId() != null && !booking.getVehicleId().isBlank()) {
+            try {
+                vehicleRepository.findById(booking.getVehicleId()).ifPresent(v -> {
+                    v.setStatus("Available"); // sesuaikan jika Vehicle menggunakan enum
+                    vehicleRepository.save(v);
+                });
+            } catch (Exception ignored) {
+            }
+        }
 
-    //     RentalBooking saved = bookingRepository.save(booking);
-    //     return saved;
-    // }
+        RentalBooking saved = bookingRepository.save(booking);
+        return saved;
+    }
 }

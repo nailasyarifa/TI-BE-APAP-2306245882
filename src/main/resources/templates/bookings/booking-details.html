@@ -72,11 +72,13 @@
              class="btn-modern btn-status">Update Status</a>
 
           <!-- Cancel Booking (Upcoming only) -->
-          <form th:if="${ st != null and #strings.equalsIgnoreCase(st,'upcoming') }"
-                th:action="@{/bookings/{id}/cancel(id=${booking.id})}"
-                method="post" style="display:inline">
-            <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-            <button type="submit" class="btn-modern btn-cancel" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel Booking</button>
+          <form th:if="${booking.status != null and #strings.equalsIgnoreCase(booking.status.name(), 'UPCOMING')}"
+          th:action="@{/bookings/{id}/delete(id=${booking.id})}"
+          method="post"
+          onsubmit="return confirmCancel();"
+          style="display:inline;">
+          <input type="hidden" name="_method" value="delete"/>
+          <button type="submit" class="btn btn-danger">Cancel Booking</button>
           </form>
         </div>
       </div>
@@ -213,6 +215,8 @@
     function formatDatetimeIso(iso){ if(!iso) return ''; const dt = new Date(iso); if(isNaN(dt)) return iso; const months=["January","February","March","April","May","June","July","August","September","October","November","December"]; const day = dt.getDate(); const month = months[dt.getMonth()]; const year = dt.getFullYear(); const hh = String(dt.getHours()).padStart(2,'0'); const mm = String(dt.getMinutes()).padStart(2,'0'); return `${month} ${ordinalSuffix(day)}, ${year} ${hh}:${mm}`; }
     function formatRupiah(amount){ if(amount === null || amount === undefined) return 'Rp 0,00'; let n = Number(amount); if(isNaN(n)) return amount; const fixed = n.toFixed(2); const parts = fixed.split('.'); let ip = parts[0]; const dp = parts[1]; ip = ip.replace(/\B(?=(\d{3})+(?!\d))/g, "."); return `Rp ${ip},${dp}`; }
     function statusClass(s){ if(!s) return 'badge-upcoming'; s = s.toString().toLowerCase().trim(); if(s==='upcoming') return 'badge-upcoming'; if(s==='ongoing') return 'badge-ongoing'; if(s==='done' || s==='completed') return 'badge-done'; return 'badge-upcoming'; }
+
+    function confirmCancel(){return confirm("Are you sure you want to cancel this booking?");}
 
     document.addEventListener('DOMContentLoaded', function(){
       document.querySelectorAll('.dt-format').forEach(el=>{
