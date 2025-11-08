@@ -46,8 +46,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Compute status string once and reuse -->
   <div class="page-container"
        th:with="st=${ (booking != null and booking.status != null) ? (booking.status.name() != null ? booking.status.name() : booking.status.toString()) : null }">
 
@@ -56,22 +54,18 @@
         <h1 class="page-title">Booking Details</h1>
 
         <div class="action-buttons" role="toolbar">
-          <!-- Update Booking Details (only when Upcoming) -->
           <a th:if="${ st != null and #strings.equalsIgnoreCase(st,'upcoming') }"
              th:href="@{/bookings/{id}/update-details(id=${booking.id})}"
              class="btn-modern btn-update">Update Booking Details</a>
 
-          <!-- Update Add-Ons (opens modal which links to manage page) -->
           <a th:if="${ st != null and #strings.equalsIgnoreCase(st,'upcoming') }"
               th:href="@{/bookings/{id}/update-addons(id=${booking.id})}"
               class="btn-modern btn-addons">Update Add-Ons</a>
 
-          <!-- Update Status (Upcoming or Ongoing) -->
           <a th:if="${ st != null and ( #strings.equalsIgnoreCase(st,'upcoming') or #strings.equalsIgnoreCase(st,'ongoing') ) }"
              th:href="@{/bookings/{id}/status(id=${booking.id})}"
              class="btn-modern btn-status">Update Status</a>
 
-          <!-- Cancel Booking (Upcoming only) -->
           <form th:if="${booking.status != null and #strings.equalsIgnoreCase(booking.status.name(), 'UPCOMING')}"
           th:action="@{/bookings/{id}/delete(id=${booking.id})}"
           method="post"
@@ -84,7 +78,6 @@
       </div>
 
       <div class="detail-grid">
-        <!-- Left -->
         <div>
           <div class="detail-item">
             <div class="detail-label">Booking ID</div>
@@ -114,7 +107,6 @@
           </div>
         </div>
 
-        <!-- Right -->
         <div>
           <div class="detail-item">
             <div class="detail-label">Vehicle ID</div>
@@ -138,7 +130,6 @@
           <div class="detail-item">
             <div class="detail-label">Status</div>
             <div class="detail-value">
-              <!-- classappend uses expression entirely inside ${...} -->
               <span class="badge-status"
                     th:classappend="${ st != null ? (
                        #strings.equalsIgnoreCase(st,'upcoming') ? ' badge-upcoming' :
@@ -152,14 +143,11 @@
         </div>
       </div>
 
-      <!-- View Add-Ons Button -->
       <button type="button" class="btn-view-addons" data-bs-toggle="modal" data-bs-target="#modalViewAddons">View Add-Ons</button>
     </div>
 
-    <!-- Back Button -->
     <a th:href="@{/bookings}" class="btn-back">Back</a>
 
-    <!-- View Add-Ons Modal -->
     <div class="modal fade" id="modalViewAddons" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -169,7 +157,6 @@
           </div>
           <div class="modal-body">
             <ul class="list-group">
-              <!-- iterate safely over list; if null, use emptyList() to avoid NPE -->
               <li th:each="a : ${ booking != null && booking.listOfAddOns != null ? booking.listOfAddOns : T(java.util.Collections).emptyList() }"
                   class="list-group-item d-flex justify-content-between align-items-center">
                 <span th:text="${a.name}">Driver</span>
@@ -182,7 +169,6 @@
       </div>
     </div>
 
-    <!-- Update Add-Ons Modal (info + link) -->
     <div class="modal fade" id="modalUpdateAddOns" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -208,7 +194,7 @@
       </div>
     </div>
 
-  </div> <!-- end page-container -->
+  </div>
 
   <script>
     function ordinalSuffix(d){ d = Number(d); if (d%100 >=11 && d%100 <=13) return d+'th'; switch (d%10){case 1: return d+'st'; case 2: return d+'nd'; case 3: return d+'rd'; default: return d+'th';} }

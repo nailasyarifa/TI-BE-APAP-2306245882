@@ -12,7 +12,6 @@
         <h5 class="card-title">Update Booking</h5>
 
         <form th:action="@{/bookings/update-details}" method="post">
-          <!-- use hidden _method to indicate PUT (Spring HiddenHttpMethodFilter) -->
           <input type="hidden" name="_method" value="put" />
           <input type="hidden" th:name="id" th:value="${updateReq.id}"/>
 

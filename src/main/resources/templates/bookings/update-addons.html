@@ -13,30 +13,19 @@
         <hr/>
 
         <form th:action="@{/bookings/update-addons}" method="post" th:object="${updateReq}">
-          <!-- CSRF (Spring) -->
           <input type="hidden" th:if="${_csrf != null}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-          <!-- Required hidden fields (service needs these) -->
           <input type="hidden" th:field="*{id}" />
           <input type="hidden" th:field="*{vehicleId}" />
-
-          <!-- Datetimes: format explicitly to yyyy-MM-dd'T'HH:mm:ss -->
           <input type="hidden" name="pickUpTime" th:value="${#temporals.format(updateReq.pickUpTime,'yyyy-MM-dd''T''HH:mm:ss')}" />
           <input type="hidden" name="dropOffTime" th:value="${#temporals.format(updateReq.dropOffTime,'yyyy-MM-dd''T''HH:mm:ss')}" />
-
-          <!-- Other hidden fields required by service -->
           <input type="hidden" th:field="*{pickUpLocation}" />
           <input type="hidden" th:field="*{dropOffLocation}" />
           <input type="hidden" th:field="*{capacityNeeded}" />
           <input type="hidden" name="transmission" th:value="${updateReq.transmission}" />
-          <!-- includeDriver as boolean: send true/false -->
           <input type="hidden" name="includeDriver" th:value="${updateReq.includeDriver}" />
-
           <div class="mb-3">
             <label class="form-label"><strong>Choose Add-Ons</strong></label>
-
-            <!-- Fallback: ensure at least one addonIds param is sent when none checked -->
-            <!-- (service ignores invalid/empty UUIDs) -->
             <input type="hidden" name="addonIds" value="" />
 
             <div th:each="ao : ${addOns}">

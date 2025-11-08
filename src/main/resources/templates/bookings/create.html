@@ -36,7 +36,6 @@
 
         <!-- MAIN FORM (search) -->
         <form th:object="${createReq}" th:action="@{/bookings/create}" method="post" id="mainForm">
-          <!-- CSRF hidden: only render if _csrf is available -->
           <div th:if="${_csrf != null}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
           </div>
@@ -92,14 +91,11 @@
               <label class="form-check-label" for="trAuto">Automatic</label>
             </div>
           </div>
-
-          <!-- keep vehicleId hidden in main form (JS will set chosen vehicleId to proceedForm) -->
           <input type="hidden" th:field="*{vehicleId}" id="vehicleIdHidden"/>
 
           <button type="submit" class="btn-search">Search for Vehicles</button>
         </form>
 
-        <!-- SEARCH RESULTS -->
         <div th:if="${vehicles != null}">
           <div class="mt-4 mb-2"><strong>Available Vehicles</strong></div>
 
@@ -123,7 +119,6 @@
                 </div>
               </div>
               <div class="form-check mt-2">
-                <!-- plain radio: JS will copy chosen into proceedForm.vehicleId -->
                 <input class="form-check-input" type="radio" name="selectedVehicle" th:value="${v.id}" th:id="${'veh-' + iterStat.index}"/>
                 <label class="form-check-label" th:for="${'veh-' + iterStat.index}"> Select </label>
               </div>

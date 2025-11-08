@@ -250,7 +250,7 @@ public class RentalBookingController {
     public String showUpdateDetailsForm(@PathVariable("id") String id, Model model, RedirectAttributes ra) {
         try {
             RentalBooking booking = bookingService.getById(id);
-            // hanya boleh jika status Upcoming
+            // hanya Upcoming
             RentalBooking.BookingStatus st = booking.getStatus();
             if (st == null || st != RentalBooking.BookingStatus.UPCOMING) {
                 ra.addFlashAttribute("error", "Booking hanya dapat diubah ketika status Upcoming.");
@@ -267,7 +267,6 @@ public class RentalBookingController {
             dto.setCapacityNeeded(booking.getCapacityNeeded());
             dto.setTransmission(booking.getTransmissionNeeded());
             dto.setIncludeDriver(booking.getIncludeDriver());
-            // addon ids - convert if needed
             if (booking.getListOfAddOns() != null) {
                 List<String> aid = booking.getListOfAddOns().stream()
                         .filter(Objects::nonNull)
@@ -275,8 +274,6 @@ public class RentalBookingController {
                         .collect(Collectors.toList());
                 dto.setAddonIds(aid);
             }
-
-            // prepare view model: locations, addOns, maybe selected vehicle summary
             List<RentalVendor> vendors = rentalVendorService.getAll();
             Set<String> locations = vendors.stream()
                     .filter(Objects::nonNull)
@@ -300,7 +297,6 @@ public class RentalBookingController {
     }
 
     // ----------------- HANDLE Update Details SUBMIT (PUT or POST) -----------------
-    // accept both PUT and POST so normal form + _method works
     @RequestMapping(value = "/update-details", method = {RequestMethod.PUT, RequestMethod.POST})
     public String handleUpdateDetails(@ModelAttribute("updateReq") UpdateRentalBookingRequestDTO dto,
                                     RedirectAttributes ra) {
@@ -327,14 +323,13 @@ public class RentalBookingController {
         model.addAttribute("booking", booking);
 
         List<String> allowed = new ArrayList<>();
-        // determine allowed next statuses (no CANCELLED)
         if (booking.getStatus() != null) {
             String cur = booking.getStatus().name();
             if ("UPCOMING".equalsIgnoreCase(cur)) {
-                allowed.add("ONGOING"); // upcoming -> ongoing
+                allowed.add("ONGOING"); 
             } else if ("ONGOING".equalsIgnoreCase(cur)) {
-                allowed.add("DONE"); // ongoing -> done
-            } // DONE -> no allowed transitions (list stays empty)
+                allowed.add("DONE"); 
+            }
         }
         model.addAttribute("statuses", allowed);
         return "bookings/update-status";
@@ -416,7 +411,6 @@ public class RentalBookingController {
         model.addAttribute("updateReq", dto);
         model.addAttribute("addOns", addOnService.getAll());
 
-        // langsung render halaman full — bukan modal fragment
         return "bookings/update-addons";
     }
 
@@ -435,7 +429,7 @@ public class RentalBookingController {
             @RequestParam(value = "addonIds", required = false) List<String> addonIds,
             RedirectAttributes ra) {
 
-        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // expects yyyy-MM-dd'T'HH:mm:ss
+        DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE_TIME; 
 
         // Parse datetimes manually
         LocalDateTime pickUpTime = null;
@@ -451,8 +445,7 @@ public class RentalBookingController {
             ra.addFlashAttribute("error", "Format tanggal/waktu tidak valid: " + ex.getMessage());
             return "redirect:/bookings/" + id + "/update-addons";
         }
-
-        // Build DTO manually to avoid binder issues
+        
         UpdateRentalBookingRequestDTO dto = new UpdateRentalBookingRequestDTO();
         dto.setId(id);
         dto.setVehicleId(vehicleId);
