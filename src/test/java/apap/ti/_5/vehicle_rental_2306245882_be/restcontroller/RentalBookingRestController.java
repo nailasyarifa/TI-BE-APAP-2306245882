@@ -3,12 +3,10 @@ package apap.ti._5.vehicle_rental_2306245882_be.restcontroller;
 import apap.ti._5.vehicle_rental_2306245882_be.dto.rental_booking.SearchResultVehicleDTO;
 import apap.ti._5.vehicle_rental_2306245882_be.model.RentalBooking;
 import apap.ti._5.vehicle_rental_2306245882_be.restdto.request.CreateRentalBookingRequestDTO;
-import apap.ti._5.vehicle_rental_2306245882_be.restdto.response.CancelBookingResponseDTO;
 import apap.ti._5.vehicle_rental_2306245882_be.service.BadRequestException;
 import apap.ti._5.vehicle_rental_2306245882_be.service.RentalBookingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -37,13 +35,31 @@ public class RentalBookingRestController {
         return ResponseEntity.ok(b);
     }
 
-    // === form/API handler for cancel ===
-    @RequestMapping(value = "/{id}/delete", method = {RequestMethod.DELETE, RequestMethod.POST})
-    public String handleCancelBooking(@PathVariable("id") String id,
-                                    RedirectAttributes ra) {
+    // API DELETE endpoint - handles JSON response
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<?> apiCancelBooking(@PathVariable("id") String id) {
         try {
             RentalBooking canceled = bookingService.cancelBooking(id);
-            // buat flash attribute yang menandakan sukses -> akan ditangkap di /bookings
+            return ResponseEntity.ok(Map.of(
+                "status", "success",
+                "id", canceled.getId()
+            ));
+        } catch (BadRequestException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("status", "error", "message", e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("status", "error", "message", e.getMessage()));
+        }
+    }
+
+    // Form POST endpoint - handles form submission with redirect
+    @PostMapping("/{id}/delete")
+    public String handleCancelBookingForm(@PathVariable("id") String id,
+                                          RedirectAttributes ra) {
+        try {
+            RentalBooking canceled = bookingService.cancelBooking(id);
             ra.addFlashAttribute("success", "Booking berhasil dibatalkan: " + canceled.getId());
         } catch (BadRequestException e) {
             ra.addFlashAttribute("error", e.getMessage());
@@ -53,22 +69,5 @@ public class RentalBookingRestController {
             return "redirect:/bookings/" + id;
         }
         return "redirect:/bookings";
-    }
-
-    @DeleteMapping("/{id}/delete")
-    @ResponseBody
-    public ResponseEntity<?> apiCancelBooking(@PathVariable("id") String id) {
-        try {
-            RentalBooking canceled = bookingService.cancelBooking(id);
-            return ResponseEntity.ok(Map.of(
-                "status", "success",
-                "id", canceled.getId()
-            ));
-        } catch (BadRequestException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("status", "error", "message", e.getMessage()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("status", "error", "message", e.getMessage()));
-        }
     }
 }

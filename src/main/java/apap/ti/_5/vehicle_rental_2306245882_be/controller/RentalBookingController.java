@@ -29,17 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * RentalBookingController - handle bookings flow:
- *  GET  /bookings             -> list all bookings
- *  GET  /bookings/{id}        -> detail booking
- *  GET  /bookings/create      -> show the search/create form
- *  POST /bookings/create      -> if vehicleId empty => SEARCH (render results)
- *                              -> if vehicleId present => FINAL CREATE (save booking)
- *  POST /bookings/create/proceed -> move to add-ons page (flash createReq)
- *  GET  /bookings/create/addons  -> show add-ons page
- *  POST /bookings/create/save     -> save booking with selected add-ons
- */
 @Controller
 @RequestMapping("/bookings")
 public class RentalBookingController {
@@ -48,19 +37,18 @@ public class RentalBookingController {
     private final RentalVendorService rentalVendorService;
     private final RentalAddOnService addOnService;
     private final VehicleService vehicleService;
+    private final VehicleRepository vehicleRepository; // optional, used for selectedVehicle
 
-    @Autowired
-    private VehicleRepository vehicleRepository; // optional, used for showing selected vehicle details
-
-    @Autowired
     public RentalBookingController(RentalBookingService bookingService,
                                    RentalVendorService rentalVendorService,
                                    RentalAddOnService addOnService,
-                                   VehicleService vehicleService) {
+                                   VehicleService vehicleService,
+                                   VehicleRepository vehicleRepository) {
         this.bookingService = bookingService;
         this.rentalVendorService = rentalVendorService;
         this.addOnService = addOnService;
         this.vehicleService = vehicleService;
+        this.vehicleRepository = vehicleRepository;
     }
 
     // ----------------- LIST + DETAIL -----------------

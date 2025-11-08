@@ -31,12 +31,12 @@ class RentalVendorServiceTest {
     @BeforeEach
     void setUp() {
         vendor1 = new RentalVendor();
-        // vendor1.setId(1L);
+        vendor1.setId(1);
         vendor1.setName("Best Rental");
         vendor1.setListOfLocations(Arrays.asList("Jakarta", "Bandung"));
 
         vendor2 = new RentalVendor();
-        // vendor2.setId(2L);
+        vendor2.setId(2);
         vendor2.setName("Top Rental");
         vendor2.setListOfLocations(Arrays.asList("Surabaya", "Malang"));
     }
@@ -70,7 +70,7 @@ class RentalVendorServiceTest {
         RentalVendor result = vendorService.getById(1L);
 
         assertNotNull(result);
-        // assertEquals(1L, result.getId());
+        assertEquals(1, result.getId());
         assertEquals("Best Rental", result.getName());
         assertEquals(2, result.getListOfLocations().size());
         verify(rentalVendorRepository, times(1)).findById(1L);
@@ -95,7 +95,7 @@ class RentalVendorServiceTest {
         RentalVendor result = vendorService.getById(2L);
 
         assertNotNull(result);
-        // assertEquals(2L, result.getId());
+        assertEquals(2, result.getId());
         assertEquals("Top Rental", result.getName());
         assertTrue(result.getListOfLocations().contains("Surabaya"));
         verify(rentalVendorRepository, times(1)).findById(2L);
@@ -104,7 +104,7 @@ class RentalVendorServiceTest {
     @Test
     void testGetAllWithMultipleLocations() {
         RentalVendor vendor3 = new RentalVendor();
-        // vendor3.setId(3L);
+        vendor3.setId(3);
         vendor3.setName("Premium Rental");
         vendor3.setListOfLocations(Arrays.asList("Jakarta", "Bandung", "Surabaya", "Bali"));
 

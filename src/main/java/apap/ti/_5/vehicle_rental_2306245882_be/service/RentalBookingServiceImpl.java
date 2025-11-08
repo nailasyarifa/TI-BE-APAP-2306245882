@@ -33,11 +33,9 @@ public class RentalBookingServiceImpl implements RentalBookingService {
     private final VehicleRepository vehicleRepository;
     private final RentalVendorRepository rentalVendorRepository;
     private final RentalAddOnRepository addOnRepository;
-
-    @Autowired
+    
     private final RentalBookingRepository bookingRepository;
 
-    @Autowired
     public RentalBookingServiceImpl(VehicleRepository vehicleRepository,
                                     RentalVendorRepository rentalVendorRepository,
                                     RentalAddOnRepository addOnRepository,
@@ -78,16 +76,15 @@ public class RentalBookingServiceImpl implements RentalBookingService {
             throw new BadRequestException("Vehicle id is invalid: " + rawVehicleId);
         }
     
-        // validasi vehicle exists (pakai chosenVehicleId yang sudah disanitasi)
+    
         Vehicle vehicle = vehicleRepository.findById(chosenVehicleId)
                 .orElseThrow(() -> new BadRequestException("Vehicle not found: " + chosenVehicleId));
     
-        // cek status available
+
         if (vehicle.getStatus() == null || !"Available".equalsIgnoreCase(vehicle.getStatus())) {
             throw new BadRequestException("Vehicle not available");
         }
     
-        // cek kapasitas
         if (req.getCapacityNeeded() != null && vehicle.getCapacity() != null &&
             req.getCapacityNeeded() > vehicle.getCapacity()) {
             throw new BadRequestException("Vehicle capacity smaller than needed");
@@ -420,7 +417,6 @@ public class RentalBookingServiceImpl implements RentalBookingService {
         }
         RentalBooking booking = ob.get();
 
-        // hanya boleh cancel jika status UPCOMING
         if (booking.getStatus() == null || booking.getStatus() != RentalBooking.BookingStatus.UPCOMING) {
             throw new BadRequestException("Booking hanya dapat dibatalkan ketika status 'Upcoming'.");
         }
@@ -428,21 +424,17 @@ public class RentalBookingServiceImpl implements RentalBookingService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime pickUp = booking.getPickUpTime();
 
-        // Jika pembatalan sebelum pickUpTime -> totalPrice = 0.0
         if (pickUp != null && now.isBefore(pickUp)) {
             booking.setTotalPrice(0.0);
         }
-        // jika pickUpTime sudah lewat -> totalPrice tetap
 
-        // set status ke DONE, tandai deleted true
         booking.setStatus(RentalBooking.BookingStatus.DONE);
         booking.setDeleted(true);
 
-        // set vehicle kembali menjadi Available (langsung)
         if (booking.getVehicleId() != null && !booking.getVehicleId().isBlank()) {
             try {
                 vehicleRepository.findById(booking.getVehicleId()).ifPresent(v -> {
-                    v.setStatus("Available"); // sesuaikan jika Vehicle menggunakan enum
+                    v.setStatus("Available");
                     vehicleRepository.save(v);
                 });
             } catch (Exception ignored) {
