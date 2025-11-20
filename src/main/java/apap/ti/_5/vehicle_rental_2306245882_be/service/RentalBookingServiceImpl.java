@@ -306,6 +306,22 @@ public class RentalBookingServiceImpl implements RentalBookingService {
       BookingListItem item = new BookingListItem();
       item.setId(b.getId());
       item.setVehicleId(b.getVehicleId());
+
+      // Populate vehicle information for frontend
+      if (b.getVehicleId() != null && !b.getVehicleId().isBlank()) {
+        vehicleRepository
+          .findById(b.getVehicleId())
+          .ifPresent(v -> {
+            BookingListItem.VehicleInfo vehicleInfo = new BookingListItem.VehicleInfo(
+              v.getId(),
+              v.getBrand(),
+              v.getModel(),
+              v.getType()
+            );
+            item.setVehicle(vehicleInfo);
+          });
+      }
+
       item.setPickUpTime(b.getPickUpTime());
       item.setDropOffTime(b.getDropOffTime());
       item.setPickUpLocation(b.getPickUpLocation());
