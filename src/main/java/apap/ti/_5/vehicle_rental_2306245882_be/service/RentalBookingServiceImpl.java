@@ -604,18 +604,18 @@ public class RentalBookingServiceImpl implements RentalBookingService {
     if (p.equals("monthly")) {
       labels =
         Arrays.asList(
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December"
+          "JANUARY",
+          "FEBRUARY",
+          "MARCH",
+          "APRIL",
+          "MAY",
+          "JUNE",
+          "JULY",
+          "AUGUST",
+          "SEPTEMBER",
+          "OCTOBER",
+          "NOVEMBER",
+          "DECEMBER"
         );
       counts = new int[12];
     } else {
@@ -643,14 +643,19 @@ public class RentalBookingServiceImpl implements RentalBookingService {
       }
     }
 
-    List<Integer> data = new ArrayList<>();
-    for (int c : counts) data.add(c);
+    List<Integer> countsList = new ArrayList<>();
+    int total = 0;
+    for (int c : counts) {
+      countsList.add(c);
+      total += c;
+    }
 
     Map<String, Object> out = new HashMap<>();
     out.put("labels", labels);
-    out.put("data", data);
+    out.put("counts", countsList);
     out.put("period", p);
     out.put("year", year);
+    out.put("total", total);
     return out;
   }
 }

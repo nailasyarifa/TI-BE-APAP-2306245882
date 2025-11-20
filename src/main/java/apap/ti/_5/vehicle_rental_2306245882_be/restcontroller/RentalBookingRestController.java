@@ -159,6 +159,31 @@ public class RentalBookingRestController {
     }
   }
 
+  // Alias endpoint for chart data (Feature 14 requirement)
+  @GetMapping("/chart")
+  public ResponseEntity<BaseResponseDTO<?>> getBookingChart(
+    @RequestParam(defaultValue = "monthly") String period,
+    @RequestParam(defaultValue = "2025") int year
+  ) {
+    try {
+      Map<String, Object> chartData = bookingService.getBookingStats(
+        period,
+        year
+      );
+      return ResponseEntity.ok(BaseResponseDTO.success(chartData));
+    } catch (Exception e) {
+      return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(
+          new BaseResponseDTO<>(
+            500,
+            "Error fetching chart data: " + e.getMessage(),
+            null
+          )
+        );
+    }
+  }
+
   // === form/API handler for cancel ===
   @RequestMapping(
     value = "/{id}/delete",
