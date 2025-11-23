@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidstringapp-1
+  namespace: default
+  labels:
+    app: sidstringapp-1
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sidstringapp-1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: sidstringapp-1
+        version: v1
+    spec:
+      containers:
+      - name: vehicle-rental-backend
+        image: ${DOCKER_IMAGE_NAME}:REPLACE_ME_TAG
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: DATABASE_URL_PROD
+          valueFrom:
+            configMapKeyRef:
+              name: sidstringapp-1-configmap
+              key: DATABASE_URL_PROD
+        - name: DATABASE_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: sidstringapp-1-configmap
+              key: DATABASE_USERNAME
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sidstringapp-1-secret
+              key: DATABASE_PASSWORD
+        - name: _APP_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: sidstringapp-1-secret
+              key: _APP_SECRET_KEY
+        - name: SCORS_ALLOWED_ORIGINS
+          valueFrom:
+            secretKeyRef:
+              name: sidstringapp-1-secret
+              key: SCORS_ALLOWED_ORIGINS
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      restartPolicy: Always
+
