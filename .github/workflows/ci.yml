@@ -85,13 +85,13 @@ jobs:
 
       - name: Generate ConfigMap
         run: |
-          printf "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: sidstringapp-1-configmap\n  namespace: default\ndata:\n  DATABASE_URL_PROD: \"%s\"\n  DATABASE_USERNAME: \"%s\"\n" \
+          printf "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: ti-apap-configmap\n  namespace: default\ndata:\n  DATABASE_URL_PROD: \"%s\"\n  DATABASE_USERNAME: \"%s\"\n" \
           "${{ secrets.DATABASE_URL_PROD }}" \
           "${{ secrets.DATABASE_USERNAME }}" > configmap.yaml
 
       - name: Generate Secret
         run: |
-          printf "apiVersion: v1\nkind: Secret\nmetadata:\n  name: sidstringapp-1-secret\n  namespace: default\ntype: Opaque\nstringData:\n  DATABASE_PASSWORD: \"%s\"\n  SCORS_ALLOWED_ORIGINS: \"%s\"\n  _APP_SECRET_KEY: \"%s\"\n" \
+          printf "apiVersion: v1\nkind: Secret\nmetadata:\n  name: ti-apap-secret\n  namespace: default\ntype: Opaque\nstringData:\n  DATABASE_PASSWORD: \"%s\"\n  SCORS_ALLOWED_ORIGINS: \"%s\"\n  _APP_SECRET_KEY: \"%s\"\n" \
           "${{ secrets.DATABASE_PASSWORD }}" \
           "${{ secrets.CORS_ALLOWED_ORIGINS }}" \
           "${{ secrets.APP_SECRET_KEY }}" > secret.yaml
@@ -113,5 +113,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
             sudo k3s kubectl apply -f ~/app/insurance-be/k8s/ &&
             sleep 5 &&
-            sudo k3s kubectl rollout status deployment/sidstringapp-1 -n default --timeout=5m
+            sudo k3s kubectl rollout status deployment/ti-apap -n default --timeout=5m
           "
