@@ -30,7 +30,14 @@ jobs:
         run: ./gradlew clean build -x test
 
       - name: Find & copy JAR
-        run: cp $(find build/libs -name "*.jar" | head -n 1) app.jar
+        run: |
+          echo "Available JAR files:"
+          find build/libs -name "*.jar"
+          echo "Copying executable JAR..."
+          cp $(find build/libs -name "*.jar" -not -name "*-plain.jar" | head -n 1) app.jar
+          echo "Verifying JAR has Main-Class attribute..."
+          jar -xf app.jar META-INF/MANIFEST.MF
+          cat META-INF/MANIFEST.MF | grep Main-Class || (echo "ERROR: No Main-Class found!" && exit 1)
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4

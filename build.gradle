@@ -15,6 +15,11 @@ java {
 	}
 }
 
+// Disable plain JAR creation (only create executable JAR)
+tasks.named('jar') {
+	enabled = false
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
