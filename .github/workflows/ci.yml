@@ -68,11 +68,6 @@ jobs:
     needs: docker-push
 
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: build-files
-
       - name: Install SSH
         run: sudo apt-get update && sudo apt-get install -y ssh
 
@@ -83,35 +78,46 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Generate ConfigMap
+      - name: Deploy with Docker
         run: |
-          printf "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: ti-apap-configmap\n  namespace: default\ndata:\n  DATABASE_URL_PROD: \"%s\"\n  DATABASE_USERNAME: \"%s\"\n" \
-          "${{ secrets.DATABASE_URL_PROD }}" \
-          "${{ secrets.DATABASE_USERNAME }}" > configmap.yaml
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+            # Stop and remove old container if exists
+            docker stop ti-apap-be 2>/dev/null || true
+            docker rm ti-apap-be 2>/dev/null || true
 
-      - name: Generate Secret
-        run: |
-          printf "apiVersion: v1\nkind: Secret\nmetadata:\n  name: ti-apap-secret\n  namespace: default\ntype: Opaque\nstringData:\n  DATABASE_PASSWORD: \"%s\"\n  SCORS_ALLOWED_ORIGINS: \"%s\"\n  _APP_SECRET_KEY: \"%s\"\n" \
-          "${{ secrets.DATABASE_PASSWORD }}" \
-          "${{ secrets.CORS_ALLOWED_ORIGINS }}" \
-          "${{ secrets.APP_SECRET_KEY }}" > secret.yaml
+            # Pull the latest image
+            docker pull ${{ env.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-      - name: Replace image tag in deployment
-        run: |
-          sed -e "s|REPLACE_ME_TAG|$IMAGE_TAG|g" \
-              -e "s|\${DOCKER_IMAGE_NAME}|$DOCKER_IMAGE_NAME|g" \
-              k8s/deployment.yaml > deployment.yaml
+            # Run the new container
+            docker run -d \
+              --name ti-apap-be \
+              --restart unless-stopped \
+              -p 8080:8080 \
+              -e SPRING_PROFILES_ACTIVE=prod \
+              -e DATABASE_URL_PROD="${{ secrets.DATABASE_URL_PROD }}" \
+              -e DATABASE_USERNAME="${{ secrets.DATABASE_USERNAME }}" \
+              -e DATABASE_PASSWORD="${{ secrets.DATABASE_PASSWORD }}" \
+              -e CORS_ALLOWED_ORIGINS="${{ secrets.CORS_ALLOWED_ORIGINS }}" \
+              -e APP_SECRET_KEY="${{ secrets.APP_SECRET_KEY }}" \
+              ${{ env.DOCKER_IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
-      - name: Copy k8s files to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "mkdir -p ~/app/insurance-be/k8s"
-          scp -o StrictHostKeyChecking=no deployment.yaml configmap.yaml secret.yaml k8s/service.yaml k8s/ingress.yaml \
-              ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/app/insurance-be/k8s/
+            # Show container status
+            docker ps -a | grep ti-apap-be
+          ENDSSH
 
-      - name: Apply to k3s
+      - name: Verify deployment
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-            sudo k3s kubectl apply -f ~/app/insurance-be/k8s/ &&
-            sleep 5 &&
-            sudo k3s kubectl rollout status deployment/ti-apap -n default --timeout=5m
-          "
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'ENDSSH'
+            echo "Waiting for application to start..."
+            sleep 10
+
+            # Check if container is running
+            if docker ps | grep -q ti-apap-be; then
+              echo "✅ Container is running"
+              docker logs ti-apap-be --tail 50
+            else
+              echo "❌ Container failed to start"
+              docker logs ti-apap-be --tail 100
+              exit 1
+            fi
+          ENDSSH
